@@ -7,7 +7,9 @@ package com.salchichon.lavadero.services;
 
 
 
+import com.salchichon.lavadero.models.ReceiptDetailsDTO;
 import com.salchichon.lavadero.models.ReceiptSummaryDTO;
+import com.salchichon.lavadero.repositories.ReceiptDetailDTORepo;
 import com.salchichon.lavadero.repositories.ReceiptSummaryRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,5 +23,7 @@ public class ReceiptService {
  
     @Autowired
      private ReceiptSummaryRepository receiptRepository;
-  
+   @Autowired
+    private ReceiptDetailDTORepo receiptDetailsDtoRepo;
+
 }

@@ -48,7 +48,7 @@ public class ReceiptController {
      }
      @DeleteMapping("/delete/{id}")
      public ResponseEntity<Void> deleteReceipt(@PathVariable Long id){
-         if(receiptrepo.existsById(id)){
+         if(!receiptrepo.existsById(id)){
              return ResponseEntity.notFound().build();
          }
          receiptrepo.deleteById(id);

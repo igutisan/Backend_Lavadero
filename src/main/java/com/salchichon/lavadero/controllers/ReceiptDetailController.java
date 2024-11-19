@@ -6,8 +6,10 @@ package com.salchichon.lavadero.controllers;
 
 
 import com.salchichon.lavadero.models.ReceiptDetail;
+import com.salchichon.lavadero.models.ReceiptDetailsDTO;
 import com.salchichon.lavadero.models.ReceiptSummaryDTO;
 
+import com.salchichon.lavadero.repositories.ReceiptDetailDTORepo;
 import com.salchichon.lavadero.repositories.ReceiptDetailRepository;
 import com.salchichon.lavadero.repositories.ReceiptSummaryRepository;
 import com.salchichon.lavadero.services.ReceiptService;
@@ -35,11 +37,18 @@ public class ReceiptDetailController {
      private  ReceiptDetailRepository reeceiptrepo;
      @Autowired
      private ReceiptSummaryRepository receiptService;
-     
-     
-     
-  
-      
+    @Autowired
+    private ReceiptDetailDTORepo receiptDetailsDtoRepo;
+
+
+
+
+    @GetMapping("/receipt/{id}")
+     public List<ReceiptDetailsDTO>getReceiptDetails(@PathVariable Long id){
+         return receiptDetailsDtoRepo.findAllServicesByReceiptId(id);
+     }
+
+
       @GetMapping("/history")
     public List<ReceiptSummaryDTO> getInvoiceHistory() {
         return receiptService.findAllInvoices();

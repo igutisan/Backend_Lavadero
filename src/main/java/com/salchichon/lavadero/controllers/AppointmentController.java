@@ -25,10 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
  @RestController
  @RequestMapping("/api/appoint")
 public class AppointmentController {
-     
+
      @Autowired
      private AppointmentRepository appointrepo;
-     
+     @GetMapping("/all/{id}")
+     public List<Appointment> getAllAppointmentsByClient(@PathVariable Long id){
+         return appointrepo.findByClient_Id(id);
+     }
+
      @GetMapping("/all")
      public List<Appointment> getAllAppointments(){
          return appointrepo.findAll();
@@ -45,20 +49,34 @@ public class AppointmentController {
      }
      @DeleteMapping("/delete/{id}")
      public ResponseEntity<Void> deleteAppointment(@PathVariable Long id){
-         if(appointrepo.existsById(id)){
+         if(!appointrepo.existsById(id)){
              return ResponseEntity.notFound().build();
          }
          appointrepo.deleteById(id);
          return ResponseEntity.ok().build();
      }
+
      @PutMapping("/edit/{id}")
-     public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppoint){
-         if(appointrepo.existsById(id)){
-             return ResponseEntity.notFound().build();
-         }
-         updatedAppoint.setId(id);
-         Appointment saveAppoint= appointrepo.save(updatedAppoint);
-         return ResponseEntity.ok(saveAppoint);
-     }
-    
+     public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody Appointment updatedAppoint) {
+
+         return (ResponseEntity<Appointment>) appointrepo.findById(id).map(existingAppoint -> {
+             // Validación para idCliente
+             if (updatedAppoint.getClient() == null) {
+                 return ResponseEntity.badRequest().body(null); // Responder con un error si idCliente es null
+             }
+
+             if (updatedAppoint.getDate() != null) {
+                 existingAppoint.setDate(updatedAppoint.getDate());
+             }
+             if (updatedAppoint.getStatus() != null) {
+                 existingAppoint.setStatus(updatedAppoint.getStatus());
+             }
+
+             existingAppoint.setClient(updatedAppoint.getClient());  // Asegurarse de que idCliente no sea null
+
+             Appointment savedAppoint = appointrepo.save(existingAppoint);
+             return ResponseEntity.ok(savedAppoint);
+         }).orElseGet(() -> ResponseEntity.notFound().build());
+
+}
 }

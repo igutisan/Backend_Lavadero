@@ -33,8 +33,9 @@ public class Appointment {
     private String status;
     @ManyToOne
     @JoinColumn(name = "id_client")
-    private Client idClient;
-    
-    
+    private Client client;
+
+
+
 }
 
